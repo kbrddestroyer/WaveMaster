@@ -20,6 +20,21 @@ void AAMainCharacterBase::BeginPlay()
 	
 }
 
+
+void AAMainCharacterBase::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+    
+	if (APlayerController* PlayerController = Cast<APlayerController>(NewController))
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem =
+			ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			Subsystem->AddMappingContext(InputMappingContext, 1);
+		}
+	}
+}
+
 // Called every frame
 void AAMainCharacterBase::Tick(const float DeltaTime)
 {
@@ -32,16 +47,14 @@ void AAMainCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInput
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	if (
-			UEnhancedInputComponent * enhancedInputComponent = Cast<UEnhancedInputComponent>( PlayerInputComponent )
-			)
+	if (UEnhancedInputComponent * enhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		// Movement function is bind to movement controls, easy, right?
+		if (!MovementInputAction)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("MovementInputAction is NULL"));
+		}
 		enhancedInputComponent->BindAction(
-			MovementInputAction,
-			ETriggerEvent::Triggered,
-			this,
-			&AAMainCharacterBase::Move
+			MovementInputAction, ETriggerEvent::Triggered, this, &AAMainCharacterBase::Move
 		);
 	}
 }
