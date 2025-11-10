@@ -34,10 +34,16 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual  void PossessedBy(AController* NewController) override;
+
 protected:
 	virtual void Move( const FInputActionValue& Value );
+
+	// Input Context
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input/Input Actions")
+	UInputMappingContext* InputMappingContext;
 	
-	// Input System
+	// Input Actions
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input/Input Actions")
 	UInputAction * MovementInputAction;
 };
