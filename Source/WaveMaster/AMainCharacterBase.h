@@ -1,0 +1,43 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameFramework/Character.h"
+#include "EnhancedInputSubsystems.h"
+
+#include "AMainCharacterBase.generated.h"
+
+
+/**
+*  Just a base class for player that implements controls (movement) logics
+*
+*  @property MovementInputAction 
+*/
+UCLASS()
+class WAVEMASTER_API AAMainCharacterBase : public ACharacter
+{
+	GENERATED_BODY()
+
+public:
+	// Sets default values for this character's properties
+	AAMainCharacterBase();
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+protected:
+	virtual void Move( const FInputActionValue& Value );
+	
+	// Input System
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input/Input Actions")
+	UInputAction * MovementInputAction;
+};
