@@ -3,6 +3,7 @@
 
 #include "AMainCharacterBase.h"
 #include "EnhancedInputComponent.h"
+#include  "WMBaseInteractable.h"
 
 
 // Sets default values
@@ -35,6 +36,27 @@ void AAMainCharacterBase::PossessedBy(AController* NewController)
 	}
 }
 
+void AAMainCharacterBase::AddInteractableInSight(AActor* Interactable)
+{
+	if (!InteractablesInSight.Contains(Interactable))
+	{
+		InteractablesInSight.Add(Interactable);
+	}
+}
+
+void AAMainCharacterBase::RemoveInteractableInSight(AActor* Interactable)
+{
+	int32 RemovingID = InteractablesInSight.Find(Interactable);
+	if (RemovingID != INDEX_NONE)
+	{
+		if (CurrentInteractableID >= RemovingID && CurrentInteractableID != 0)
+		{
+			CurrentInteractableID--;
+		}
+		InteractablesInSight.RemoveSingle(Interactable);
+	}
+}
+
 // Called every frame
 void AAMainCharacterBase::Tick(const float DeltaTime)
 {
@@ -49,13 +71,12 @@ void AAMainCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInput
 
 	if (UEnhancedInputComponent * enhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		if (!MovementInputAction)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("MovementInputAction is NULL"));
-		}
 		enhancedInputComponent->BindAction(
-			MovementInputAction, ETriggerEvent::Triggered, this, &AAMainCharacterBase::Move
-		);
+				MovementInputAction, ETriggerEvent::Triggered, this, &AAMainCharacterBase::Move
+			);
+		enhancedInputComponent->BindAction(
+				InteractionInputAction, ETriggerEvent::Triggered, this, &AAMainCharacterBase::Interact
+			);
 	}
 }
 
@@ -79,6 +100,28 @@ void AAMainCharacterBase::Move(const FInputActionValue& Value)
 
 	AddMovementInput(forward, inputValue2D.Y);
 	AddMovementInput(right, inputValue2D.X);
+}
+
+void AAMainCharacterBase::Interact(const FInputActionValue& Value)
+{
+	if (InteractablesInSight.IsEmpty()) return;
+	AWMBaseInteractable* InteractableObject = Cast<AWMBaseInteractable>(InteractablesInSight[CurrentInteractableID]);
+
+	if (InteractableObject == nullptr) return;
+	InteractableObject->Interact();
+	CurrentInteractableID = GetNextInteractableID();
+}
+
+int32 AAMainCharacterBase::GetNextInteractableID() const
+{
+	int32 nextInteractableID = CurrentInteractableID + 1;
+
+	if (nextInteractableID >= InteractablesInSight.Num())
+	{
+		nextInteractableID = 0;
+	}
+	
+	return nextInteractableID;
 }
 
 

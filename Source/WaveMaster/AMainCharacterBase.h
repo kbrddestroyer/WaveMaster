@@ -36,9 +36,21 @@ public:
 
 	virtual  void PossessedBy(AController* NewController) override;
 
+	void AddInteractableInSight(AActor* Interactable);
+
+	void RemoveInteractableInSight(AActor* Interactable);
+
 protected:
 	virtual void Move( const FInputActionValue& Value );
 
+	void Interact(const FInputActionValue& Value);
+
+	int32 GetNextInteractableID() const;
+	
+	int32 CurrentInteractableID = 0;
+
+	TArray<AActor*> InteractablesInSight;
+	
 	// Input Context
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input/Input Actions")
 	UInputMappingContext* InputMappingContext;
@@ -46,4 +58,7 @@ protected:
 	// Input Actions
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input/Input Actions")
 	UInputAction * MovementInputAction;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input/Input Actions")
+	UInputAction * InteractionInputAction;
 };
