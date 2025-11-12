@@ -1,0 +1,35 @@
+﻿name: Build Project
+
+on:
+  push: 
+    branches:
+      - main
+      - trunk
+      - master
+      - release/*
+      - feature/*
+  pull_request: 
+    branches:
+      - main
+      - trunk
+      - master
+      - release/*
+      - feature/*
+  workflow_dispatch:
+  workflow_call: 
+    
+jobs:
+  build_all:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+              
+      - name: Build UE5 project
+        uses: OrchidIsle/UE5-Build-Project@latest
+        with:
+          UPROJECT_PATH: ${{ github.workspace }}/WaveMaster/WaveMaster.uproject
+          BUILD_CONFIG: Development
+          PLATFORM: Win64
