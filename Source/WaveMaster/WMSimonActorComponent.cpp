@@ -1,0 +1,70 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "WMSimonActorComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "InGameLevelSwitcher.h"
+
+// Sets default values for this component's properties
+UWMSimonActorComponent::UWMSimonActorComponent()
+{
+	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
+	// off to improve performance if you don't need them.
+	PrimaryComponentTick.bCanEverTick = true;
+
+	// ...
+}
+
+
+// Called when the game starts
+void UWMSimonActorComponent::BeginPlay()
+{
+	Super::BeginPlay();
+	if (LevelSwitcherClass == nullptr) return;
+	
+	TArray<AActor*> OutActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), LevelSwitcherClass, OutActors);
+
+	if (!OutActors.IsEmpty())
+	{
+		LevelSwitcher = Cast<AInGameLevelSwitcher>(OutActors[0]);
+	}
+	
+}
+
+
+// Called every frame
+void UWMSimonActorComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	// ...
+}
+
+
+void UWMSimonActorComponent::AddActionInCheckQueue(const SimonActionID Action)
+{
+	qActionsToCheck.Insert(Action, 0);
+}
+
+bool UWMSimonActorComponent::CheckPerformedAction(const SimonActionID Action, const float PerformTime)
+{
+	// 1. Calculate delta time with prev. time
+
+	if (const float DeltaTime = PerformTime - LastTriggerTime; DeltaTime < 0 && DeltaTime * 1000 > MAX_TIME)
+	{
+		return false;
+	}
+
+	// 2. Set new LastTriggerTime
+	LastTriggerTime = PerformTime;
+
+	// 3. Check action
+	if (Action == qActionsToCheck.Last())
+	{
+		qActionsToCheck.Pop();
+		return true;
+	}
+	return false;
+}
+

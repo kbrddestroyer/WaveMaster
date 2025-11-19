@@ -18,6 +18,7 @@ void AInGameLevelSwitcher::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Dont understand now
 	if (Instance)
 	{
 		return;
@@ -33,8 +34,10 @@ void AInGameLevelSwitcher::Tick(float DeltaTime)
 	static bool ShouldTriggerSwitch = true;
 	
 	Super::Tick(DeltaTime);
+	
 	CompleteTime += DeltaTime;
 
+	// Why timer ?
 	if (CompleteTime >= 10 && ShouldTriggerSwitch)
 	{
 		TriggerLevelSwitch();
@@ -66,7 +69,7 @@ void AInGameLevelSwitcher::DestroyOldGeometry()
 
 void AInGameLevelSwitcher::CreateNewGeometry()
 {
-	if (!NextGeometry)
+	if (GeometryList.IsEmpty())
 		return;
 
 	FActorSpawnParameters Params;
@@ -78,7 +81,7 @@ void AInGameLevelSwitcher::CreateNewGeometry()
 	const FRotator Rotation = FRotator::ZeroRotator;
 	
 	CurrentGeometry = GetWorld()->SpawnActor<AActor>(
-			NextGeometry,
+			GeometryList.Pop(),
 			Position,
 			Rotation,
 			Params

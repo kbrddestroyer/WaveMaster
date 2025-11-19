@@ -9,6 +9,8 @@
 #include "AMainCharacterBase.generated.h"
 
 
+class UWMSimonActorComponent;
+
 /**
 *  Just a base class for player that implements controls (movement) logics
 *
@@ -40,6 +42,9 @@ public:
 
 	void RemoveInteractableInSight(AActor* Interactable);
 
+	UFUNCTION(BlueprintCallable)
+	UWMSimonActorComponent* GetWMSimonActorComponent() const;
+
 protected:
 	virtual void Move( const FInputActionValue& Value );
 
@@ -61,4 +66,7 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input/Input Actions")
 	UInputAction * InteractionInputAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
+	UWMSimonActorComponent * SimonSaysControllerComponent;
 };

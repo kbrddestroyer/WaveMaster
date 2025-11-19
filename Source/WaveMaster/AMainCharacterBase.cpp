@@ -3,8 +3,8 @@
 
 #include "AMainCharacterBase.h"
 #include "EnhancedInputComponent.h"
-#include  "WMBaseInteractable.h"
-
+#include "WMBaseInteractable.h"
+#include "WMSimonActorComponent.h"
 
 // Sets default values
 AAMainCharacterBase::AAMainCharacterBase()
@@ -12,6 +12,7 @@ AAMainCharacterBase::AAMainCharacterBase()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	SimonSaysControllerComponent = CreateDefaultSubobject<UWMSimonActorComponent>(TEXT("SimonSaysController"));
 }
 
 // Called when the game starts or when spawned
@@ -56,6 +57,12 @@ void AAMainCharacterBase::RemoveInteractableInSight(AActor* Interactable)
 		InteractablesInSight.RemoveSingle(Interactable);
 	}
 }
+
+UWMSimonActorComponent* AAMainCharacterBase::GetWMSimonActorComponent() const
+{
+	return SimonSaysControllerComponent;
+}
+
 
 // Called every frame
 void AAMainCharacterBase::Tick(const float DeltaTime)

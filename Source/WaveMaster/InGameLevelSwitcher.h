@@ -41,9 +41,8 @@ private:
 	void CreateNewGeometry();
 	
 protected:
-	// std::vector ? 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Switcher")
-	TSubclassOf<AActor> NextGeometry;
+	TArray<TSubclassOf<AActor>> GeometryList;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Switcher")
 	AActor* CurrentGeometry;
