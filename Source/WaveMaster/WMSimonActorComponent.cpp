@@ -4,6 +4,7 @@
 #include "WMSimonActorComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "InGameLevelSwitcher.h"
+#include "WMSimonAction.h"
 
 // Sets default values for this component's properties
 UWMSimonActorComponent::UWMSimonActorComponent()
@@ -20,6 +21,9 @@ UWMSimonActorComponent::UWMSimonActorComponent()
 void UWMSimonActorComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+	OwningActor = GetOwner();
+	
 	if (LevelSwitcherClass == nullptr) return;
 	
 	TArray<AActor*> OutActors;
@@ -42,12 +46,12 @@ void UWMSimonActorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 }
 
 
-void UWMSimonActorComponent::AddActionInCheckQueue(const SimonActionID Action)
+void UWMSimonActorComponent::AddActionInCheckQueue(const uint8 Action)
 {
 	qActionsToCheck.Insert(Action, 0);
 }
 
-bool UWMSimonActorComponent::CheckPerformedAction(const SimonActionID Action, const float PerformTime)
+bool UWMSimonActorComponent::CheckPerformedAction(uint8 ActionID, const float PerformTime)
 {
 	// 1. Calculate delta time with prev. time
 
@@ -60,11 +64,23 @@ bool UWMSimonActorComponent::CheckPerformedAction(const SimonActionID Action, co
 	LastTriggerTime = PerformTime;
 
 	// 3. Check action
-	if (Action == qActionsToCheck.Last())
+	if (ActionID == qActionsToCheck.Last())
 	{
 		qActionsToCheck.Pop();
 		return true;
 	}
 	return false;
+}
+
+void UWMSimonActorComponent::PerformAction(UWMSimonAction* Action)
+{
+	if (isEnemyComponent)
+	{
+		Action->PerformEnemyAction(OwningActor);
+	}
+	else
+	{
+		Action->PerformPlayerAction(OwningActor);
+	}
 }
 

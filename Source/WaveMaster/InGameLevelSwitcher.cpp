@@ -30,19 +30,8 @@ void AInGameLevelSwitcher::BeginPlay()
 // Called every frame
 void AInGameLevelSwitcher::Tick(float DeltaTime)
 {
-	static float CompleteTime = 0;
-	static bool ShouldTriggerSwitch = true;
-	
 	Super::Tick(DeltaTime);
-	
-	CompleteTime += DeltaTime;
 
-	// Why timer ?
-	if (CompleteTime >= 10 && ShouldTriggerSwitch)
-	{
-		TriggerLevelSwitch();
-		ShouldTriggerSwitch = false;
-	}
 }
 
 void AInGameLevelSwitcher::BeginDestroy()
