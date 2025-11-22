@@ -6,6 +6,8 @@
 #include "WMBaseInteractable.h"
 #include "WMSimonActorComponent.h"
 
+#include "Kismet/GameplayStatics.h"
+
 // Sets default values
 AAMainCharacterBase::AAMainCharacterBase()
 {
@@ -59,6 +61,23 @@ void AAMainCharacterBase::RemoveInteractableInSight(AActor* Interactable)
 }
 
 UWMSimonActorComponent* AAMainCharacterBase::GetWMSimonActorComponent() const
+{
+	return SimonSaysControllerComponent;
+}
+
+void AAMainCharacterBase::SetInputEnabled(bool bEnable)
+{
+	if (bEnable)
+	{
+		EnableInput(UGameplayStatics::GetPlayerController(GetWorld(), 0));		
+	}
+	else
+	{
+		DisableInput(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	}
+}
+
+UWMSimonActorComponent* AAMainCharacterBase::GetSimonComponent() const
 {
 	return SimonSaysControllerComponent;
 }

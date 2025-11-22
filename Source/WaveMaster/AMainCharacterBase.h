@@ -45,6 +45,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	UWMSimonActorComponent* GetWMSimonActorComponent() const;
 
+	void SetInputEnabled(bool bEnable);
+
+	UWMSimonActorComponent* GetSimonComponent() const;
+	
 protected:
 	virtual void Move( const FInputActionValue& Value );
 

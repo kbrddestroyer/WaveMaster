@@ -31,7 +31,6 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	
-	TArray<uint8> qActionsToCheck;
 	float LastTriggerTime = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Actions")
@@ -43,13 +42,27 @@ protected:
 	AActor* OwningActor;
 	
 	AInGameLevelSwitcher* LevelSwitcher;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Actions")
+	TArray<UWMSimonAction*> ActionList;
+
+	TArray<UWMSimonAction*> ActionsToCheck;
+	
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	
-	void AddActionInCheckQueue(uint8 ActionID);
 	bool CheckPerformedAction(uint8 ActionID, float PerformTime);
 
 	UFUNCTION(BlueprintCallable)
 	void PerformAction(UWMSimonAction* Action);
+
+	void SetIsEnemyComponent(bool bIsEnemy);
+	
+	TArray<UWMSimonAction*> PerformActionsFromList();
+
+	void ReceiveActionsToCheck(TArray<UWMSimonAction*> OutActionsToCheck);
+
+	UFUNCTION(BlueprintCallable)
+	void StartSimonSequence();
 };

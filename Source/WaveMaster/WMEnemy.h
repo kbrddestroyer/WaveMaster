@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "AMainCharacterBase.h"
+#include "WMSimonActorComponent.h"
 #include "WMEnemy.generated.h"
 
 class USphereComponent;
@@ -22,6 +23,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
 	void FindCharacter();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Collision")
@@ -30,7 +33,18 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Data")
 	TSubclassOf<AAMainCharacterBase> PlayerCharacterClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Components")
+	UWMSimonActorComponent* SimonActorComponent;
+
+	UWMSimonActorComponent* PlayerSimonComponent;
+	
 	AAMainCharacterBase* CharacterObjectRef;
+	
+	UFUNCTION()
+	void OnSphereOverlapBegin(
+		UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult
+		);
 	
 public:	
 	// Called every frame

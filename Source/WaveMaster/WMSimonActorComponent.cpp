@@ -45,12 +45,6 @@ void UWMSimonActorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	// ...
 }
 
-
-void UWMSimonActorComponent::AddActionInCheckQueue(const uint8 Action)
-{
-	qActionsToCheck.Insert(Action, 0);
-}
-
 bool UWMSimonActorComponent::CheckPerformedAction(uint8 ActionID, const float PerformTime)
 {
 	// 1. Calculate delta time with prev. time
@@ -64,9 +58,9 @@ bool UWMSimonActorComponent::CheckPerformedAction(uint8 ActionID, const float Pe
 	LastTriggerTime = PerformTime;
 
 	// 3. Check action
-	if (ActionID == qActionsToCheck.Last())
+	if (ActionID == ActionsToCheck[0]->GetActionID())
 	{
-		qActionsToCheck.Pop();
+		ActionsToCheck.RemoveAt(0);
 		return true;
 	}
 	return false;
@@ -83,4 +77,40 @@ void UWMSimonActorComponent::PerformAction(UWMSimonAction* Action)
 		Action->PerformPlayerAction(OwningActor);
 	}
 }
+
+void UWMSimonActorComponent::SetIsEnemyComponent(bool bIsEnemy)
+{
+	isEnemyComponent = bIsEnemy;
+}
+
+TArray<UWMSimonAction*> UWMSimonActorComponent::PerformActionsFromList()
+{
+	if (ActionList.IsEmpty()) return ActionList;
+	TArray<UWMSimonAction*> OutActions;
+
+	while (!ActionList.IsEmpty())
+	{
+		UWMSimonAction* Action = ActionList[0];
+		ActionList.RemoveAt(0);
+
+		PerformAction(Action);
+		
+		OutActions.Add(Action);
+	}
+	
+	return OutActions;
+}
+
+void UWMSimonActorComponent::ReceiveActionsToCheck(TArray<UWMSimonAction*> OutActionsToCheck)
+{
+	ActionsToCheck = OutActionsToCheck;
+}
+
+void UWMSimonActorComponent::StartSimonSequence()
+{
+	 // Enable time check
+	
+}
+
+
 

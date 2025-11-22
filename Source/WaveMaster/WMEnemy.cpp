@@ -14,6 +14,9 @@ AWMEnemy::AWMEnemy()
 
 	ActivationSphere = CreateDefaultSubobject<USphereComponent>("ActivationSphere");
 	ActivationSphere->SetupAttachment(GetRootComponent());
+
+	SimonActorComponent = CreateDefaultSubobject<UWMSimonActorComponent>("SimonActorComponent");
+	SimonActorComponent->SetIsEnemyComponent(true);
 }
 
 // Called when the game starts or when spawned
@@ -26,6 +29,19 @@ void AWMEnemy::BeginPlay()
 		FindCharacter();	
 	}
 
+	// Setup delegate callbacks
+	ActivationSphere->OnComponentBeginOverlap.AddDynamic(this, &AWMEnemy::OnSphereOverlapBegin);
+}
+
+void AWMEnemy::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	if (CharacterObjectRef != nullptr)
+	{
+		CharacterObjectRef->SetInputEnabled(true);
+		PlayerSimonComponent = nullptr;
+	}
 }
 
 void AWMEnemy::FindCharacter()
@@ -59,3 +75,19 @@ void AWMEnemy::Tick(float DeltaTime)
 	}
 }
 
+
+void AWMEnemy::OnSphereOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	AAMainCharacterBase* PlayerObj = Cast<AAMainCharacterBase>(OtherActor);
+	if (PlayerObj == CharacterObjectRef)
+	{
+		CharacterObjectRef->SetInputEnabled(false);
+		PlayerSimonComponent = PlayerObj->GetSimonComponent();
+
+		TArray<UWMSimonAction*> ActionsToCheck = SimonActorComponent->PerformActionsFromList();
+		PlayerSimonComponent->ReceiveActionsToCheck(ActionsToCheck);
+
+		PlayerSimonComponent->StartSimonSequence();
+	}
+}
