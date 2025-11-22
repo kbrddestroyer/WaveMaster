@@ -33,7 +33,6 @@ void UWMSimonActorComponent::BeginPlay()
 	{
 		LevelSwitcher = Cast<AInGameLevelSwitcher>(OutActors[0]);
 	}
-	
 }
 
 
@@ -42,27 +41,40 @@ void UWMSimonActorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	if (isSequenceStarted)
+	{
+		if (CurrentSequenceTime >= MaxSequenceTime)
+		{
+			// Fail
+			
+			StopSimonSequence();
+
+			// Switch to first level here
+		}
+		CurrentSequenceTime += DeltaTime;
+	}
+	
 }
 
-bool UWMSimonActorComponent::CheckPerformedAction(uint8 ActionID, const float PerformTime)
+bool UWMSimonActorComponent::CheckPerformedAction(uint8 ActionID)
 {
-	// 1. Calculate delta time with prev. time
-
-	if (const float DeltaTime = PerformTime - LastTriggerTime; DeltaTime < 0 && DeltaTime * 1000 > MAX_TIME)
-	{
-		return false;
-	}
-
-	// 2. Set new LastTriggerTime
-	LastTriggerTime = PerformTime;
-
-	// 3. Check action
+	if (! isSequenceStarted) return false;
+	
 	if (ActionID == ActionsToCheck[0]->GetActionID())
 	{
 		ActionsToCheck.RemoveAt(0);
+		if (ActionsToCheck.IsEmpty())
+		{
+			// Success, remove enemy here
+		}
+		
 		return true;
 	}
+	// Fail
+	StopSimonSequence();
+
+	// Switch to first level here
+	
 	return false;
 }
 
@@ -106,10 +118,18 @@ void UWMSimonActorComponent::ReceiveActionsToCheck(TArray<UWMSimonAction*> OutAc
 	ActionsToCheck = OutActionsToCheck;
 }
 
-void UWMSimonActorComponent::StartSimonSequence()
+void UWMSimonActorComponent::StartSimonSequence(float NewMaxSequenceTime)
 {
 	 // Enable time check
-	
+	isSequenceStarted = true;
+	MaxSequenceTime = NewMaxSequenceTime;
+}
+
+void UWMSimonActorComponent::StopSimonSequence()
+{
+	isSequenceStarted = false;
+	CurrentSequenceTime = 0;
+	MaxSequenceTime = 0;
 }
 
 

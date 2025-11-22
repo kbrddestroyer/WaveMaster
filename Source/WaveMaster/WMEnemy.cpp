@@ -88,6 +88,6 @@ void AWMEnemy::OnSphereOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 		TArray<UWMSimonAction*> ActionsToCheck = SimonActorComponent->PerformActionsFromList();
 		PlayerSimonComponent->ReceiveActionsToCheck(ActionsToCheck);
 
-		PlayerSimonComponent->StartSimonSequence();
+		PlayerSimonComponent->StartSimonSequence(10);
 	}
 }

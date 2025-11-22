@@ -47,12 +47,18 @@ protected:
 	TArray<UWMSimonAction*> ActionList;
 
 	TArray<UWMSimonAction*> ActionsToCheck;
+
+	float CurrentSequenceTime = 0.f;
+
+	float MaxSequenceTime = 0.f;
+	
+	bool isSequenceStarted = false;
 	
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	
-	bool CheckPerformedAction(uint8 ActionID, float PerformTime);
+	bool CheckPerformedAction(uint8 ActionID);
 
 	UFUNCTION(BlueprintCallable)
 	void PerformAction(UWMSimonAction* Action);
@@ -64,5 +70,8 @@ public:
 	void ReceiveActionsToCheck(TArray<UWMSimonAction*> OutActionsToCheck);
 
 	UFUNCTION(BlueprintCallable)
-	void StartSimonSequence();
+	void StartSimonSequence(float NewMaxSequenceTime);
+
+	UFUNCTION(BlueprintCallable)
+	void StopSimonSequence();
 };
