@@ -25,4 +25,6 @@ protected:
 	TArray<TSubclassOf<UWMSimonAction>> SimonActionClasses;
 	
 	TArray<UWMSimonAction*> SimonActions;
+
+	void SetupActionInstances();
 };

@@ -18,13 +18,7 @@ void AInGameLevelSwitcher::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// Dont understand now
-	if (Instance)
-	{
-		return;
-	}
-
-	Instance = this;
+	CurrSessionGeometryList = GeometryList;
 }
 
 // Called every frame
@@ -47,6 +41,19 @@ void AInGameLevelSwitcher::TriggerLevelSwitch()
 	CreateNewGeometry();
 }
 
+AWMLevelGeometry* AInGameLevelSwitcher::GetCurrentGeometry()
+{
+	return CurrentGeometry;
+}
+
+void AInGameLevelSwitcher::UpdateSession()
+{
+	CurrSessionGeometryList = GeometryList;
+	DestroyOldGeometry();
+
+	CreateNewGeometry();
+}
+
 void AInGameLevelSwitcher::DestroyOldGeometry()
 {
 	if (!CurrentGeometry)
@@ -58,7 +65,7 @@ void AInGameLevelSwitcher::DestroyOldGeometry()
 
 void AInGameLevelSwitcher::CreateNewGeometry()
 {
-	if (GeometryList.IsEmpty())
+	if (CurrSessionGeometryList.IsEmpty())
 		return;
 
 	FActorSpawnParameters Params;
@@ -69,8 +76,8 @@ void AInGameLevelSwitcher::CreateNewGeometry()
 	const FVector Position = GetActorLocation();
 	const FRotator Rotation = FRotator::ZeroRotator;
 	
-	CurrentGeometry = GetWorld()->SpawnActor<AActor>(
-			GeometryList.Pop(),
+	CurrentGeometry = GetWorld()->SpawnActor<AWMLevelGeometry>(
+			CurrSessionGeometryList.Pop(),
 			Position,
 			Rotation,
 			Params

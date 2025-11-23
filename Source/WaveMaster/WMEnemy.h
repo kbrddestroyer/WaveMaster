@@ -36,6 +36,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Components")
 	UWMSimonActorComponent* SimonActorComponent;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Actions")
+	int32 ActionsNumber = 0;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Actions")
+	int32 SequenceLength = 600;
+
 	UWMSimonActorComponent* PlayerSimonComponent;
 	
 	AAMainCharacterBase* CharacterObjectRef;
@@ -45,6 +51,8 @@ protected:
 		UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult
 		);
+
+	void SetupSimonActions();
 	
 public:	
 	// Called every frame

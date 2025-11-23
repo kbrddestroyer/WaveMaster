@@ -3,6 +3,8 @@
 
 #include "WMEnemy.h"
 #include "Components/SphereComponent.h"
+#include "WMGameMode.h"
+#include "WMSimonAction.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -29,6 +31,8 @@ void AWMEnemy::BeginPlay()
 		FindCharacter();	
 	}
 
+	SetupSimonActions();
+	
 	// Setup delegate callbacks
 	ActivationSphere->OnComponentBeginOverlap.AddDynamic(this, &AWMEnemy::OnSphereOverlapBegin);
 }
@@ -88,6 +92,27 @@ void AWMEnemy::OnSphereOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 		TArray<UWMSimonAction*> ActionsToCheck = SimonActorComponent->PerformActionsFromList();
 		PlayerSimonComponent->ReceiveActionsToCheck(ActionsToCheck);
 
-		PlayerSimonComponent->StartSimonSequence(10);
+		PlayerSimonComponent->StartSimonSequence(SequenceLength);
+	}
+}
+
+void AWMEnemy::SetupSimonActions()
+{
+	AWMGameMode* WMGameMode = Cast<AWMGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+
+	if (WMGameMode == nullptr) return;
+
+	TArray<UWMSimonAction*> AllActions = WMGameMode->GetAllSimonActions();
+	if (ActionsNumber > AllActions.Num())
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Red, "Not enough actions in gameMode");
+		return;
+	}
+
+	for (int i = 0; i < ActionsNumber; i++)
+	{
+		int32 RandomActionID = FMath::RandRange(0, AllActions.Num() - 1);
+
+		SimonActorComponent->AddActionToList(AllActions[RandomActionID]);
 	}
 }

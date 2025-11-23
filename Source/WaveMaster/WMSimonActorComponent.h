@@ -74,4 +74,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void StopSimonSequence();
+
+	void AddActionToList(UWMSimonAction* Action);
 };

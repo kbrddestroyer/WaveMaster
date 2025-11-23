@@ -8,6 +8,24 @@ void AWMGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (SimonActions.IsEmpty())
+	{
+		SetupActionInstances();
+	}
+}
+
+TArray<UWMSimonAction*> AWMGameMode::GetAllSimonActions()
+{
+	if (SimonActions.IsEmpty())
+	{
+		SetupActionInstances();
+	}
+	
+	return SimonActions;
+}
+
+void AWMGameMode::SetupActionInstances()
+{
 	if (SimonActionClasses.IsEmpty()) return;
 	for (int i = 0; i < SimonActionClasses.Num(); i++)
 	{
@@ -15,9 +33,4 @@ void AWMGameMode::BeginPlay()
 		Action->SetActionID(i);
 		SimonActions.Add(Action);
 	}
-}
-
-TArray<UWMSimonAction*> AWMGameMode::GetAllSimonActions()
-{
-	return SimonActions;
 }

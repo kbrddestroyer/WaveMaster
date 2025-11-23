@@ -65,7 +65,7 @@ bool UWMSimonActorComponent::CheckPerformedAction(uint8 ActionID)
 		ActionsToCheck.RemoveAt(0);
 		if (ActionsToCheck.IsEmpty())
 		{
-			// Success, remove enemy here
+			LevelSwitcher->GetCurrentGeometry()->RemoveEnemy();
 		}
 		
 		return true;
@@ -102,6 +102,7 @@ TArray<UWMSimonAction*> UWMSimonActorComponent::PerformActionsFromList()
 
 	while (!ActionList.IsEmpty())
 	{
+		if (ActionList[0] == nullptr) break;
 		UWMSimonAction* Action = ActionList[0];
 		ActionList.RemoveAt(0);
 
@@ -130,6 +131,11 @@ void UWMSimonActorComponent::StopSimonSequence()
 	isSequenceStarted = false;
 	CurrentSequenceTime = 0;
 	MaxSequenceTime = 0;
+}
+
+void UWMSimonActorComponent::AddActionToList(UWMSimonAction* Action)
+{
+	ActionList.Add(Action);
 }
 
 

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "WMLevelGeometry.h"
 #include "InGameLevelSwitcher.generated.h"
 
 UCLASS()
@@ -35,6 +36,11 @@ public:
 	 */
 	UFUNCTION()
 	void TriggerLevelSwitch();
+
+	AWMLevelGeometry* GetCurrentGeometry();
+
+	void UpdateSession();
+	
 private:
 
 	void DestroyOldGeometry();
@@ -42,8 +48,10 @@ private:
 	
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Switcher")
-	TArray<TSubclassOf<AActor>> GeometryList;
+	TArray<TSubclassOf<AWMLevelGeometry>> GeometryList;
+	
+	TArray<TSubclassOf<AWMLevelGeometry>> CurrSessionGeometryList;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Switcher")
-	AActor* CurrentGeometry;
+	AWMLevelGeometry* CurrentGeometry;
 };
