@@ -5,7 +5,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "WMEnemy.h"
+#include "Components/BoxComponent.h"
 #include "WMLevelGeometry.generated.h"
+
+class AInGameLevelSwitcher;
 
 UCLASS()
 class WAVEMASTER_API AWMLevelGeometry : public AActor
@@ -22,15 +25,36 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawns")
 	TSubclassOf<AWMEnemy> EnemyClass;
-
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Geometry")
+	USceneComponent* GeometryRoot;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawns")
 	USceneComponent* EnemySpawnPoint;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawns")
+	USceneComponent* PlayerStartPoint;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LevelSwitch")
+	UBoxComponent* LevelSwitchVolume;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LevelSwitch")
+	AInGameLevelSwitcher* OwnerGeometrySwitcher;
+
 	AWMEnemy* EnemyEntity;
+
+	UFUNCTION()
+	void OnSwitcherOverlapBegin(
+		UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult
+	);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable, Category = "Spawns")
 	void RemoveEnemy();
+
+	void SetOwner(AInGameLevelSwitcher* InOwner);
 };

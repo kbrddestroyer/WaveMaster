@@ -65,6 +65,7 @@ bool UWMSimonActorComponent::CheckPerformedAction(uint8 ActionID)
 		ActionsToCheck.RemoveAt(0);
 		if (ActionsToCheck.IsEmpty())
 		{
+			// Success
 			LevelSwitcher->GetCurrentGeometry()->RemoveEnemy();
 		}
 		
@@ -124,6 +125,17 @@ void UWMSimonActorComponent::StartSimonSequence(float NewMaxSequenceTime)
 	 // Enable time check
 	isSequenceStarted = true;
 	MaxSequenceTime = NewMaxSequenceTime;
+
+	/* ---Only for debug purposes--- */
+
+	TArray<UWMSimonAction*> FuckingActions = ActionsToCheck;
+	
+	for (int i = 0; i < FuckingActions.Num(); i++)
+	{
+		CheckPerformedAction(FuckingActions[i]->GetActionID());
+	}
+
+	/* ---Only for debug purposes--- */
 }
 
 void UWMSimonActorComponent::StopSimonSequence()

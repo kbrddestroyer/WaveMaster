@@ -49,14 +49,14 @@ AWMLevelGeometry* AInGameLevelSwitcher::GetCurrentGeometry()
 void AInGameLevelSwitcher::UpdateSession()
 {
 	CurrSessionGeometryList = GeometryList;
-	DestroyOldGeometry();
 
+	DestroyOldGeometry();
 	CreateNewGeometry();
 }
 
 void AInGameLevelSwitcher::DestroyOldGeometry()
 {
-	if (!CurrentGeometry)
+	if (CurrentGeometry == nullptr)
 		return;
 	
 	CurrentGeometry->Destroy();
@@ -77,9 +77,11 @@ void AInGameLevelSwitcher::CreateNewGeometry()
 	const FRotator Rotation = FRotator::ZeroRotator;
 	
 	CurrentGeometry = GetWorld()->SpawnActor<AWMLevelGeometry>(
-			CurrSessionGeometryList.Pop(),
+			CurrSessionGeometryList[0],
 			Position,
 			Rotation,
 			Params
 		);
+	CurrSessionGeometryList.RemoveAt(0);
+	CurrentGeometry->SetOwner(this);
 }

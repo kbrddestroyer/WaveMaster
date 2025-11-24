@@ -30,10 +30,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void BeginDestroy() override;
 	
-	/**
-	 * Function that triggers level switch
-	 * Param NextLevelName should be set to valid value in editor!
-	 */
 	UFUNCTION()
 	void TriggerLevelSwitch();
 
