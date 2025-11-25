@@ -74,7 +74,7 @@ void AInGameLevelSwitcher::CreateNewGeometry()
 	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
 	const FVector Position = GetActorLocation();
-	const FRotator Rotation = FRotator::ZeroRotator;
+	const FRotator Rotation = GetActorRotation();
 	
 	CurrentGeometry = GetWorld()->SpawnActor<AWMLevelGeometry>(
 			CurrSessionGeometryList[0],

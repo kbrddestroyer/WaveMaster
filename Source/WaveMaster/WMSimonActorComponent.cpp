@@ -46,10 +46,9 @@ void UWMSimonActorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 		if (CurrentSequenceTime >= MaxSequenceTime)
 		{
 			// Fail
-			
 			StopSimonSequence();
-
-			// Switch to first level here
+			LevelSwitcher->UpdateSession();
+			GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Red, "Fail no time");
 		}
 		CurrentSequenceTime += DeltaTime;
 	}
@@ -66,15 +65,17 @@ bool UWMSimonActorComponent::CheckPerformedAction(uint8 ActionID)
 		if (ActionsToCheck.IsEmpty())
 		{
 			// Success
+			StopSimonSequence();
 			LevelSwitcher->GetCurrentGeometry()->RemoveEnemy();
+			GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Green, "Success");
 		}
 		
 		return true;
 	}
 	// Fail
 	StopSimonSequence();
-
-	// Switch to first level here
+	LevelSwitcher->UpdateSession();
+	GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Red, "Fail wrong action");
 	
 	return false;
 }
@@ -128,13 +129,23 @@ void UWMSimonActorComponent::StartSimonSequence(float NewMaxSequenceTime)
 
 	/* ---Only for debug purposes--- */
 
-	TArray<UWMSimonAction*> FuckingActions = ActionsToCheck;
-	
-	for (int i = 0; i < FuckingActions.Num(); i++)
+	if (isSendDebugActionSequence)
 	{
-		CheckPerformedAction(FuckingActions[i]->GetActionID());
+		TArray<UWMSimonAction*> FuckingActions = ActionsToCheck;
+	
+		for (int i = 0; i < FuckingActions.Num(); i++)
+		{
+			if (i == FuckingActions.Num() - 1 && isSendWrongAction)
+			{
+				CheckPerformedAction(99);
+			}
+			else
+			{
+				CheckPerformedAction(FuckingActions[i]->GetActionID());
+			}
+			
+		}
 	}
-
 	/* ---Only for debug purposes--- */
 }
 

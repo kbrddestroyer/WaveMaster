@@ -53,6 +53,12 @@ protected:
 	float MaxSequenceTime = 0.f;
 	
 	bool isSequenceStarted = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Debug")
+	bool isSendDebugActionSequence = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Debug")
+	bool isSendWrongAction = false;
 	
 public:	
 	// Called every frame

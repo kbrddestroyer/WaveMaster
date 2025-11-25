@@ -5,7 +5,9 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "WMEnemy.h"
+#include "Camera/CameraComponent.h"
 #include "Components/BoxComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "WMLevelGeometry.generated.h"
 
 class AInGameLevelSwitcher;
@@ -22,6 +24,8 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawns")
 	TSubclassOf<AWMEnemy> EnemyClass;
@@ -37,6 +41,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LevelSwitch")
 	UBoxComponent* LevelSwitchVolume;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Geometry")
+	UCameraComponent* CameraComp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Geometry")
+	USpringArmComponent* SpringArmComp;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LevelSwitch")
 	AInGameLevelSwitcher* OwnerGeometrySwitcher;

@@ -13,7 +13,8 @@ AAMainCharacterBase::AAMainCharacterBase()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	bFindCameraComponentWhenViewTarget = true;
+	
 	SimonSaysControllerComponent = CreateDefaultSubobject<UWMSimonActorComponent>(TEXT("SimonSaysController"));
 }
 
@@ -22,6 +23,10 @@ void AAMainCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	PlayerController->SetIgnoreLookInput(false);
+	PlayerController->SetIgnoreMoveInput(false);
+	PlayerController->SetInputMode(FInputModeGameOnly());
 }
 
 
