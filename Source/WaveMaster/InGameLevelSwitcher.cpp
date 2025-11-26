@@ -19,6 +19,11 @@ void AInGameLevelSwitcher::BeginPlay()
 	Super::BeginPlay();
 
 	CurrSessionGeometryList = GeometryList;
+
+	if (CurrentGeometry == nullptr)
+	{
+		TriggerLevelSwitch();
+	}
 }
 
 // Called every frame
@@ -50,8 +55,7 @@ void AInGameLevelSwitcher::UpdateSession()
 {
 	CurrSessionGeometryList = GeometryList;
 
-	DestroyOldGeometry();
-	CreateNewGeometry();
+	TriggerLevelSwitch();
 }
 
 void AInGameLevelSwitcher::DestroyOldGeometry()

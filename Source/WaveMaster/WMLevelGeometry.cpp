@@ -38,11 +38,6 @@ void AWMLevelGeometry::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (EnemyClass != nullptr)
-	{
-		EnemyEntity = GetWorld()->SpawnActor<AWMEnemy>(EnemyClass, EnemySpawnPoint->GetComponentTransform());
-	}
-
 	AAMainCharacterBase* MainPlayer = Cast<AAMainCharacterBase>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	MainPlayer->SetActorLocation(PlayerStartPoint->GetComponentLocation());
 	FRotator NewPlayerRotation = FRotator(
@@ -57,6 +52,11 @@ void AWMLevelGeometry::BeginPlay()
 	{
 		FViewTargetTransitionParams Params = FViewTargetTransitionParams();
 		MainPlayerController->SetViewTarget(this, FViewTargetTransitionParams());	
+	}
+
+	if (EnemyClass != nullptr)
+	{
+		EnemyEntity = GetWorld()->SpawnActor<AWMEnemy>(EnemyClass, EnemySpawnPoint->GetComponentTransform());
 	}
 	
 	LevelSwitchVolume->OnComponentBeginOverlap.AddDynamic(this, &AWMLevelGeometry::OnSwitcherOverlapBegin);

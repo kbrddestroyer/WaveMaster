@@ -41,7 +41,7 @@ void UWMSimonActorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (isSequenceStarted)
+	if (isSequenceStarted && MaxSequenceTime > 0)
 	{
 		if (CurrentSequenceTime >= MaxSequenceTime)
 		{
@@ -49,6 +49,7 @@ void UWMSimonActorComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 			StopSimonSequence();
 			LevelSwitcher->UpdateSession();
 			GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Red, "Fail no time");
+			return;
 		}
 		CurrentSequenceTime += DeltaTime;
 	}
@@ -141,6 +142,7 @@ void UWMSimonActorComponent::StartSimonSequence(float NewMaxSequenceTime)
 			}
 			else
 			{
+				PerformAction(FuckingActions[i]);
 				CheckPerformedAction(FuckingActions[i]->GetActionID());
 			}
 			
