@@ -53,7 +53,15 @@ protected:
 	virtual void Move( const FInputActionValue& Value );
 
 	void Interact(const FInputActionValue& Value);
+	
+	void PauseMenuCall(const FInputActionValue& Value);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void PauseMenuCallback();
+
+	UFUNCTION(BlueprintCallable)
+	void SetMouseCursorVisible(bool bVisible);
+	
 	int32 GetNextInteractableID() const;
 	
 	int32 CurrentInteractableID = 0;
@@ -71,6 +79,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input/Input Actions")
 	UInputAction * InteractionInputAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input/Input Actions")
+	UInputAction * PauseMenuCallInputAction;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components")
 	UWMSimonActorComponent * SimonSaysControllerComponent;
 };
