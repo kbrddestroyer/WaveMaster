@@ -3,15 +3,19 @@
 
 #include "AMainCharacterBase.h"
 #include "EnhancedInputComponent.h"
-#include  "WMBaseInteractable.h"
+#include "WMBaseInteractable.h"
+#include "WMSimonActorComponent.h"
 
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AAMainCharacterBase::AAMainCharacterBase()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	bFindCameraComponentWhenViewTarget = true;
+	
+	SimonSaysControllerComponent = CreateDefaultSubobject<UWMSimonActorComponent>(TEXT("SimonSaysController"));
 }
 
 // Called when the game starts or when spawned
@@ -19,6 +23,10 @@ void AAMainCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	PlayerController->SetIgnoreLookInput(false);
+	PlayerController->SetIgnoreMoveInput(false);
+	PlayerController->SetInputMode(FInputModeGameOnly());
 }
 
 
@@ -56,6 +64,29 @@ void AAMainCharacterBase::RemoveInteractableInSight(AActor* Interactable)
 		InteractablesInSight.RemoveSingle(Interactable);
 	}
 }
+
+UWMSimonActorComponent* AAMainCharacterBase::GetWMSimonActorComponent() const
+{
+	return SimonSaysControllerComponent;
+}
+
+void AAMainCharacterBase::SetInputEnabled(bool bEnable)
+{
+	if (bEnable)
+	{
+		EnableInput(UGameplayStatics::GetPlayerController(GetWorld(), 0));		
+	}
+	else
+	{
+		DisableInput(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	}
+}
+
+UWMSimonActorComponent* AAMainCharacterBase::GetSimonComponent() const
+{
+	return SimonSaysControllerComponent;
+}
+
 
 // Called every frame
 void AAMainCharacterBase::Tick(const float DeltaTime)

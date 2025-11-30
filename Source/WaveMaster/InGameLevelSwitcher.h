@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "WMLevelGeometry.h"
 #include "InGameLevelSwitcher.generated.h"
 
 UCLASS()
@@ -29,22 +30,24 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void BeginDestroy() override;
 	
-	/**
-	 * Function that triggers level switch
-	 * Param NextLevelName should be set to valid value in editor!
-	 */
 	UFUNCTION()
 	void TriggerLevelSwitch();
+
+	AWMLevelGeometry* GetCurrentGeometry();
+
+	void UpdateSession();
+	
 private:
 
 	void DestroyOldGeometry();
 	void CreateNewGeometry();
 	
 protected:
-	// std::vector ? 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Switcher")
-	TSubclassOf<AActor> NextGeometry;
+	TArray<TSubclassOf<AWMLevelGeometry>> GeometryList;
+	
+	TArray<TSubclassOf<AWMLevelGeometry>> CurrSessionGeometryList;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Level Switcher")
-	AActor* CurrentGeometry;
+	AWMLevelGeometry* CurrentGeometry;
 };

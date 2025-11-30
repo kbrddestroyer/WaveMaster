@@ -18,28 +18,19 @@ void AInGameLevelSwitcher::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (Instance)
-	{
-		return;
-	}
+	CurrSessionGeometryList = GeometryList;
 
-	Instance = this;
+	if (CurrentGeometry == nullptr)
+	{
+		TriggerLevelSwitch();
+	}
 }
 
 // Called every frame
 void AInGameLevelSwitcher::Tick(float DeltaTime)
 {
-	static float CompleteTime = 0;
-	static bool ShouldTriggerSwitch = true;
-	
 	Super::Tick(DeltaTime);
-	CompleteTime += DeltaTime;
 
-	if (CompleteTime >= 10 && ShouldTriggerSwitch)
-	{
-		TriggerLevelSwitch();
-		ShouldTriggerSwitch = false;
-	}
 }
 
 void AInGameLevelSwitcher::BeginDestroy()
@@ -55,9 +46,21 @@ void AInGameLevelSwitcher::TriggerLevelSwitch()
 	CreateNewGeometry();
 }
 
+AWMLevelGeometry* AInGameLevelSwitcher::GetCurrentGeometry()
+{
+	return CurrentGeometry;
+}
+
+void AInGameLevelSwitcher::UpdateSession()
+{
+	CurrSessionGeometryList = GeometryList;
+
+	TriggerLevelSwitch();
+}
+
 void AInGameLevelSwitcher::DestroyOldGeometry()
 {
-	if (!CurrentGeometry)
+	if (CurrentGeometry == nullptr)
 		return;
 	
 	CurrentGeometry->Destroy();
@@ -66,7 +69,7 @@ void AInGameLevelSwitcher::DestroyOldGeometry()
 
 void AInGameLevelSwitcher::CreateNewGeometry()
 {
-	if (!NextGeometry)
+	if (CurrSessionGeometryList.IsEmpty())
 		return;
 
 	FActorSpawnParameters Params;
@@ -75,12 +78,14 @@ void AInGameLevelSwitcher::CreateNewGeometry()
 	Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
 	const FVector Position = GetActorLocation();
-	const FRotator Rotation = FRotator::ZeroRotator;
+	const FRotator Rotation = GetActorRotation();
 	
-	CurrentGeometry = GetWorld()->SpawnActor<AActor>(
-			NextGeometry,
+	CurrentGeometry = GetWorld()->SpawnActor<AWMLevelGeometry>(
+			CurrSessionGeometryList[0],
 			Position,
 			Rotation,
 			Params
 		);
+	CurrSessionGeometryList.RemoveAt(0);
+	CurrentGeometry->SetOwner(this);
 }
