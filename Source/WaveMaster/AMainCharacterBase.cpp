@@ -108,6 +108,9 @@ void AAMainCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		enhancedInputComponent->BindAction(
 				InteractionInputAction, ETriggerEvent::Triggered, this, &AAMainCharacterBase::Interact
 			);
+		enhancedInputComponent->BindAction(
+				PauseMenuCallInputAction, ETriggerEvent::Triggered, this, &AAMainCharacterBase::PauseMenuCall
+			);
 	}
 }
 
@@ -141,6 +144,20 @@ void AAMainCharacterBase::Interact(const FInputActionValue& Value)
 	if (InteractableObject == nullptr) return;
 	InteractableObject->Interact();
 	CurrentInteractableID = GetNextInteractableID();
+}
+
+void AAMainCharacterBase::PauseMenuCall(const FInputActionValue& Value)
+{
+	PauseMenuCallback();
+}
+
+void AAMainCharacterBase::SetMouseCursorVisible(bool bVisible)
+{
+	APlayerController* SelfController = Cast<APlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	if (SelfController != nullptr)
+	{
+		SelfController->bShowMouseCursor = bVisible;
+	}
 }
 
 int32 AAMainCharacterBase::GetNextInteractableID() const
