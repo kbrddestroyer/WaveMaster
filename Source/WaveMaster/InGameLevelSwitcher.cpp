@@ -20,10 +20,6 @@ void AInGameLevelSwitcher::BeginPlay()
 
 	CurrSessionGeometryList = GeometryList;
 
-	// if (CurrentGeometry != nullptr)
-	// {
-	// 	TriggerLevelSwitch();
-	// }
 }
 
 // Called every frame
