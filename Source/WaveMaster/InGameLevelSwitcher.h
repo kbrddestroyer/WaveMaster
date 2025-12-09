@@ -30,7 +30,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void BeginDestroy() override;
 	
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void TriggerLevelSwitch();
 
 	AWMLevelGeometry* GetCurrentGeometry();

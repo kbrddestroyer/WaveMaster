@@ -63,7 +63,8 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	
+
+	UFUNCTION(BlueprintCallable)
 	bool CheckPerformedAction(uint8 ActionID);
 
 	UFUNCTION(BlueprintCallable)

@@ -1,7 +1,5 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "WMGameMode.h"
+#include "Kismet/GameplayStatics.h"
 #include "WMSimonAction.h"
 
 void AWMGameMode::BeginPlay()
@@ -12,6 +10,9 @@ void AWMGameMode::BeginPlay()
 	{
 		SetupActionInstances();
 	}
+
+	AActor* OutActor = UGameplayStatics::GetActorOfClass(GetWorld(), AInGameLevelSwitcher::StaticClass());
+	InGameLevelSwitcher = Cast<AInGameLevelSwitcher>(OutActor);
 }
 
 TArray<UWMSimonAction*> AWMGameMode::GetAllSimonActions()
@@ -22,6 +23,14 @@ TArray<UWMSimonAction*> AWMGameMode::GetAllSimonActions()
 	}
 	
 	return SimonActions;
+}
+
+void AWMGameMode::ChangeLevel()
+{
+	if (InGameLevelSwitcher != nullptr)
+	{
+		InGameLevelSwitcher->TriggerLevelSwitch();
+	}
 }
 
 void AWMGameMode::SetupActionInstances()
