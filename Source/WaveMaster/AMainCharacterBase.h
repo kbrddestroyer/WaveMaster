@@ -47,6 +47,7 @@ public:
 
 	void SetInputEnabled(bool bEnable);
 
+	UFUNCTION(BlueprintCallable)
 	UWMSimonActorComponent* GetSimonComponent() const;
 	
 protected:

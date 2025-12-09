@@ -128,7 +128,7 @@ void UWMSimonActorComponent::StartSimonSequence(float NewMaxSequenceTime)
 	isSequenceStarted = true;
 	MaxSequenceTime = NewMaxSequenceTime;
 
-	/* ---Only for debug purposes--- */
+	/* ---Only for debug purposes--- 
 
 	if (isSendDebugActionSequence)
 	{
@@ -148,7 +148,7 @@ void UWMSimonActorComponent::StartSimonSequence(float NewMaxSequenceTime)
 			
 		}
 	}
-	/* ---Only for debug purposes--- */
+	 ---Only for debug purposes--- */
 }
 
 void UWMSimonActorComponent::StopSimonSequence()

@@ -18,6 +18,7 @@ public:
 
 	void BeginPlay() override;
 
+	UFUNCTION(BlueprintCallable)
 	TArray<UWMSimonAction*> GetAllSimonActions();
 
 	UFUNCTION(BlueprintCallable)
