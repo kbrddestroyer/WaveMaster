@@ -101,7 +101,7 @@ void AWMLevelGeometry::RemoveEnemy()
 	}
 }
 
-void AWMLevelGeometry::SetOwner(AInGameLevelSwitcher* InOwner)
+void AWMLevelGeometry::SetGeometryOwner(AInGameLevelSwitcher* InOwner)
 {
 	OwnerGeometrySwitcher = InOwner;
 }

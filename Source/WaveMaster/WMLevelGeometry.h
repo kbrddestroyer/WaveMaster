@@ -75,5 +75,5 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Spawns")
 	void RemoveEnemy();
 
-	void SetOwner(AInGameLevelSwitcher* InOwner);
+	void SetGeometryOwner(AInGameLevelSwitcher* InOwner);
 };

@@ -23,6 +23,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void ChangeLevel();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void TriggerGameEnd();
 	
 protected:
 
