@@ -21,6 +21,9 @@ AWMLevelGeometry::AWMLevelGeometry()
 	PlayerStartPoint = CreateDefaultSubobject<USceneComponent>(TEXT("PlayerStartPoint"));
 	PlayerStartPoint->SetupAttachment(RootComponent);
 	
+	InteractableSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("InteractableSpawnPoint"));
+	InteractableSpawnPoint->SetupAttachment(RootComponent);
+	
 	LevelSwitchVolume = CreateDefaultSubobject<UBoxComponent>(TEXT("LevelSwitchVolume"));
 	LevelSwitchVolume->SetupAttachment(RootComponent);
 	
@@ -58,6 +61,11 @@ void AWMLevelGeometry::BeginPlay()
 	{
 		EnemyEntity = GetWorld()->SpawnActor<AWMEnemy>(EnemyClass, EnemySpawnPoint->GetComponentTransform());
 	}
+
+	if (InteractableClass != nullptr)
+	{
+		InteractableInstance = GetWorld()->SpawnActor<AWMBaseInteractable>(InteractableClass, InteractableSpawnPoint->GetComponentTransform());
+	}
 	
 	LevelSwitchVolume->OnComponentBeginOverlap.AddDynamic(this, &AWMLevelGeometry::OnSwitcherOverlapBegin);
 }
@@ -67,6 +75,7 @@ void AWMLevelGeometry::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	Super::EndPlay(EndPlayReason);
 
 	if (EnemyEntity != nullptr) EnemyEntity->Destroy();
+	if (InteractableInstance != nullptr) InteractableInstance->Destroy();
 }
 
 void AWMLevelGeometry::OnSwitcherOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
@@ -92,7 +101,7 @@ void AWMLevelGeometry::RemoveEnemy()
 	}
 }
 
-void AWMLevelGeometry::SetOwner(AInGameLevelSwitcher* InOwner)
+void AWMLevelGeometry::SetGeometryOwner(AInGameLevelSwitcher* InOwner)
 {
 	OwnerGeometrySwitcher = InOwner;
 }

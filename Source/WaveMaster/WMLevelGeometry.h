@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "WMEnemy.h"
+#include "WMBaseInteractable.h"
 #include "Camera/CameraComponent.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -38,7 +39,10 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawns")
 	USceneComponent* PlayerStartPoint;
-
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawns")
+	USceneComponent* InteractableSpawnPoint;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LevelSwitch")
 	UBoxComponent* LevelSwitchVolume;
 
@@ -51,7 +55,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LevelSwitch")
 	AInGameLevelSwitcher* OwnerGeometrySwitcher;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawns")
+	TSubclassOf<AWMBaseInteractable> InteractableClass;
+	
 	AWMEnemy* EnemyEntity;
+
+	AWMBaseInteractable* InteractableInstance;
 
 	UFUNCTION()
 	void OnSwitcherOverlapBegin(
@@ -66,5 +75,5 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Spawns")
 	void RemoveEnemy();
 
-	void SetOwner(AInGameLevelSwitcher* InOwner);
+	void SetGeometryOwner(AInGameLevelSwitcher* InOwner);
 };

@@ -60,15 +60,15 @@ bool UWMSimonActorComponent::CheckPerformedAction(uint8 ActionID)
 {
 	if (! isSequenceStarted) return false;
 	
-	if (ActionID == ActionsToCheck[0]->GetActionID())
+	if (ActionID == ActionsToCheck.Last()->GetActionID())
 	{
-		ActionsToCheck.RemoveAt(0);
+		ActionsToCheck.Pop();
 		if (ActionsToCheck.IsEmpty())
 		{
 			// Success
+			GEngine->AddOnScreenDebugMessage(-1, MaxSequenceTime, FColor::Green, "Success");
 			StopSimonSequence();
 			LevelSwitcher->GetCurrentGeometry()->RemoveEnemy();
-			GEngine->AddOnScreenDebugMessage(-1, 4, FColor::Green, "Success");
 		}
 		
 		return true;
@@ -83,6 +83,7 @@ bool UWMSimonActorComponent::CheckPerformedAction(uint8 ActionID)
 
 void UWMSimonActorComponent::PerformAction(UWMSimonAction* Action)
 {
+	if (OwningActor == nullptr) return;
 	if (isEnemyComponent)
 	{
 		Action->PerformEnemyAction(OwningActor);
@@ -106,8 +107,8 @@ TArray<UWMSimonAction*> UWMSimonActorComponent::PerformActionsFromList()
 	while (!ActionList.IsEmpty())
 	{
 		if (ActionList[0] == nullptr) break;
-		UWMSimonAction* Action = ActionList[0];
-		ActionList.RemoveAt(0);
+		UWMSimonAction* Action = ActionList.Last();
+		ActionList.Pop();
 
 		PerformAction(Action);
 		
@@ -128,7 +129,7 @@ void UWMSimonActorComponent::StartSimonSequence(float NewMaxSequenceTime)
 	isSequenceStarted = true;
 	MaxSequenceTime = NewMaxSequenceTime;
 
-	/* ---Only for debug purposes--- */
+	/* ---Only for debug purposes--- 
 
 	if (isSendDebugActionSequence)
 	{
@@ -148,7 +149,7 @@ void UWMSimonActorComponent::StartSimonSequence(float NewMaxSequenceTime)
 			
 		}
 	}
-	/* ---Only for debug purposes--- */
+	 ---Only for debug purposes--- */
 }
 
 void UWMSimonActorComponent::StopSimonSequence()

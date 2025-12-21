@@ -1,7 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "InGameLevelSwitcher.h"
+#include "Kismet/GameplayStatics.h"
+#include "WMGameMode.h"
 
 AInGameLevelSwitcher * AInGameLevelSwitcher::Instance;
 
@@ -20,10 +21,6 @@ void AInGameLevelSwitcher::BeginPlay()
 
 	CurrSessionGeometryList = GeometryList;
 
-	if (CurrentGeometry == nullptr)
-	{
-		TriggerLevelSwitch();
-	}
 }
 
 // Called every frame
@@ -69,9 +66,14 @@ void AInGameLevelSwitcher::DestroyOldGeometry()
 
 void AInGameLevelSwitcher::CreateNewGeometry()
 {
-	if (CurrSessionGeometryList.IsEmpty())
+	AGameModeBase* CurrGameModeBase = UGameplayStatics::GetGameMode(GetWorld());
+	AWMGameMode* CurrWMGameMode = Cast<AWMGameMode>(CurrGameModeBase);
+	if (CurrSessionGeometryList.IsEmpty() && CurrWMGameMode != nullptr)
+	{
+		CurrWMGameMode->TriggerGameEnd();
 		return;
-
+	}
+	
 	FActorSpawnParameters Params;
 	Params.Owner = nullptr;
 	Params.Instigator = GetInstigator();
@@ -87,5 +89,5 @@ void AInGameLevelSwitcher::CreateNewGeometry()
 			Params
 		);
 	CurrSessionGeometryList.RemoveAt(0);
-	CurrentGeometry->SetOwner(this);
+	CurrentGeometry->SetGeometryOwner(this);
 }

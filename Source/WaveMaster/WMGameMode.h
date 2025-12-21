@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "InGameLevelSwitcher.h"
 #include "WMGameMode.generated.h"
 
 class UWMSimonAction;
@@ -17,7 +18,14 @@ public:
 
 	void BeginPlay() override;
 
+	UFUNCTION(BlueprintCallable)
 	TArray<UWMSimonAction*> GetAllSimonActions();
+
+	UFUNCTION(BlueprintCallable)
+	void ChangeLevel();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void TriggerGameEnd();
 	
 protected:
 
@@ -26,5 +34,7 @@ protected:
 	
 	TArray<UWMSimonAction*> SimonActions;
 
+	AInGameLevelSwitcher* InGameLevelSwitcher;
+	
 	void SetupActionInstances();
 };
